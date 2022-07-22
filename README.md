@@ -1,5 +1,13 @@
 # **WebSocket 内存马，一种新型内存马技术**
 
+### 0.兼容性测试
+
+目前测试过 Tomcat Spring Jetty 都可以正常使用
+
+WebLogic 比较特殊有条件，详情见 WebLogic 目录和文件内的注释
+
+Jboss(WildFly) 未进行测试
+
 ### 1.前言
 
 WebSocket是一种全双工通信协议，即客户端可以向服务端发送请求，服务端也可以主动向客户端推送数据。这样的特点，使得它在一些实时性要求比较高的场景效果斐然（比如微信朋友圈实时通知、在线协同编辑等）。主流浏览器以及一些常见服务端通信框架（Tomcat、netty、undertow、webLogic等）都对WebSocket进行了技术支持。
@@ -72,6 +80,24 @@ WebSocket是一种全双工通信协议，它可以用来做代理，且速度�
 ./gost -L "socks5://:1080" -F "ws://127.0.0.1:8080?path=/proxy"
 ```
 然后连接本地1080端口socks5即可使用代理
+
+### 6.多功能shell实现
+
+想要使用ws马首先得支持连接ws协议的工具，目前市面的webshell管理工具都要从源码上修改才能支持ws协议
+
+（内容更新 ：蚁剑v2.1.15已更新支持）
+
+
+具体实现过程也并不复杂，相当于只是替换了协议，内容其实可以不变。例如给出的哥斯拉支持样例，基本逻辑并没发生改变，只是协议变了
+
+还有一个问题是ws马必须先注入再连接，并不能直接连接jsp马。
+
+然而例如哥斯拉的jsp马本身就是支持远程代码执行，那么jsp马其实可以保持不变就用哥斯拉原版，但发送class要修改，先发送过去先初始化注册ws马的class，连上ws以后再初始化恶意class，多一步，第二步连接的时候使用ws连接。
+
+如果是内存注入的webshell，则直接使用ws协议连接
+
+<img src="image/ws.jpg" alt="ws" width="49%"></a> <img src="image/ws2.jpg" alt="ws" width="49%"></a>
+
 
 ## 版权声明
 完整代码：[https://github.com/veo/wsMemShell](https://github.com/veo/wsMemShell) 
